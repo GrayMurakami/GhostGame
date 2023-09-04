@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
             isJumping = false; // allow a new jump after the end of the current jump
         }, 800);
     
-        //  функцию checkCollision, которая проверяет столкновение между призраком и заданным элементом.
+        //  checkCollision - checks for a collision between a ghost and element
         function checkCollision(element) {
             const ghostRect = ghost.getBoundingClientRect();
             const elementRect = element.getBoundingClientRect();
