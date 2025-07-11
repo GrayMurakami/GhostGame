@@ -50,6 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
         obs.className = 'obstacle';
         obs.style.backgroundImage   = `url('${t.img}')`;
         obs.style.animationDuration = `${t.dur}s`;  // время движения
+        // вот эта строчка гарантирует, что спавн будет справа за границей
+        obs.style.left = `${gameContainer.clientWidth}px`;
         obsContainer.appendChild(obs);
         obs.addEventListener('animationend', () => obs.remove());
     }
