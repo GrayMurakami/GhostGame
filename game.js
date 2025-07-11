@@ -1,61 +1,77 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const ghost = document.getElementById("ghost");
-    const circle = document.getElementById("circle");
-    const hand = document.getElementById("hand");
-    const coffin = document.getElementById("coffin");
-    const gameContainer = document.querySelector(".game");
+document.addEventListener('DOMContentLoaded', () => {
+    const ghost        = document.getElementById('ghost');
+    const obsContainer = document.getElementById('obstacles');
+    const scoreElem    = document.getElementById('score');
 
     let isJumping = false;
-    
-    document.addEventListener("keydown", function(event) {
-        if ((event.keyCode === 32 || event.key === " ") && !isJumping) {
-            jump();
+    let gameOver  = false;
+    let score     = 0;
+    let obstacleInterval;
+    let scoreInterval;
+
+    // Обработка прыжка по пробелу
+    document.addEventListener('keydown', (e) => {
+        if ((e.code === 'Space' || e.key === ' ') && !isJumping && !gameOver) {
+            isJumping = true;
+            ghost.classList.add('jump');
+            ghost.addEventListener('animationend', () => {
+                ghost.classList.remove('jump');
+                isJumping = false;
+            }, { once: true });
         }
     });
 
-    function jump() {
-        isJumping = true;
-            ghost.classList.add("jump");
-        
-        const jumpHeight = 95; // new jump height
+    // Запуск игры
+    function startGame() {
+        obstacleInterval = setInterval(spawnObstacle, 1500);  /* <-- интервал спавна (мс) */
+        scoreInterval    = setInterval(() => {
+            score++;
+            scoreElem.textContent = score;
+        }, 100);                                             /* <-- скорость роста счёта (мс) */
+        requestAnimationFrame(gameLoop);
+    }
 
-        function checkCollisionAndContinue() {
-            if (checkCollision(circle) || checkCollision(hand) || checkCollision(coffin)) {
-                stopGame();
-            } else {
-                if(parseInt(getComputedStyle(ghost).top) > jumpHeight) {
-                    // if it's a max height, going down
-                    ghost.style.transition = "top 0.4s"; // new speed of going down
-                    ghost.style.top = "236px";
-                }
-                requestAnimationFrame(checkCollisionAndContinue);
+    // Создание одного препятствия
+    function spawnObstacle() {
+        const types = [
+            { img: 'circle.png', dur: 3 },   // <-- путь + длительность движения (сек)
+            { img: 'hand.png',   dur: 2.5 },
+            { img: 'rip.png',    dur: 4   }
+        ];
+        const t = types[Math.floor(Math.random() * types.length)];
+        const d = document.createElement('div');
+        d.className = 'obstacle';
+        d.style.backgroundImage    = `url('${t.img}')`;
+        d.style.animationDuration  = `${t.dur}s`;             /* <-- скорость движения (сек) */
+        obsContainer.append(d);
+        d.addEventListener('animationend', () => d.remove());
+    }
+
+    // Главный цикл — проверяем коллизии
+    function gameLoop() {
+        if (gameOver) return;
+        const gR = ghost.getBoundingClientRect();
+        document.querySelectorAll('.obstacle').forEach((o) => {
+            const r = o.getBoundingClientRect();
+            if (
+                gR.right  > r.left + 10 &&
+                gR.left   < r.right - 10 &&
+                gR.bottom > r.top + 10
+            ) {
+                endGame();
             }
-        }
+        });
+        requestAnimationFrame(gameLoop);
+    }
 
-        setTimeout( function() {
-            ghost.style.transition = "top 0.8s"; // return the default animation speed
-            ghost.classList.remove("jump"); 
-            requestAnimationFrame(checkCollisionAndContinue);
-            isJumping = false; // allow a new jump after the end of the current jump
-        }, 800);
-    
-        //  checkCollision - checks for a collision between a ghost and element
-        function checkCollision(element) {
-            const ghostRect = ghost.getBoundingClientRect();
-            const elementRect = element.getBoundingClientRect();
+    // Окончание игры
+    function endGame() {
+        gameOver = true;
+        clearInterval(obstacleInterval);
+        clearInterval(scoreInterval);
+        alert(`Game Over! Score: ${score}`);
+        // здесь можно добавить логику перезапуска
+    }
 
-            const collision = 
-                ghostRect.bottom > elementRect.top &&
-                ghostRect.top < elementRect.bottom &&
-                ghostRect.right > elementRect.left &&
-                ghostRect.left < elementRect.right;
-
-            return collision;
-        }
-
-        function stopGame() {
-            alert("Game Over Bitch!"); 
-        }
-
-    };
+    startGame();
 });
