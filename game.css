@@ -33,18 +33,22 @@ body {
     100% { transform: translateY(0); }
 }
 
+/* Препятствия */
 .obstacle {
     position: absolute;
     bottom: 0;
-    width: 70px;   /* <-- ширина препятствия */
-    height: 70px;  /* <-- высота препятствия */
+    /* ставим их сразу за правой границей поля */
+    left: 800px;          /* <-- здесь должно совпадать с шириной .game */
+    width: 70px;
+    height: 70px;
     background-size: cover;
     animation: obstacleMove linear forwards;
 }
 
+/* Двигаем препятствие слева направо на 800px + 70px = 870px */
 @keyframes obstacleMove {
     from { transform: translateX(0); }
-    to   { transform: translateX(-900px); } /* <-- путь движения препятствия */
+    to   { transform: translateX(-870px); } /* <-- 800 (поле) + 70 (спрайт) */
 }
 
 #score {
