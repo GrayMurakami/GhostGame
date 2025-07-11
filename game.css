@@ -1,111 +1,57 @@
 body {
-    background-image: url(halloweenjpg.jpg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    background-size: cover;
+    margin: 0;
+    overflow: hidden;
+    background: url('halloweenjpg.jpg') center/cover fixed no-repeat; /* <-- поменять фон */
 }
 
 .game {
-    width: 800px;
-    height: 307px;
-    border-bottom: 2px solid black;
-    margin: auto;
-    overflow: hidden; /* Prevents animation from overflowing */
+    position: relative;
+    width: 800px;   /* <-- ширина игрового поля */
+    height: 300px;  /* <-- высота игрового поля */
+    margin: 50px auto;
+    border: 2px solid #000;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.5);
 }
 
-/* Existing styles for #ghost, #circle, #hand, and #coffin */
 #ghost {
-    width: 70px;
-    height: 70px;
-    background-image: url(gastli.png);
-    background-size: 70px 70px;
-    position: relative;
-    top: 236px;
+    position: absolute;
+    bottom: 0;
+    left: 50px;    /* <-- начальная позиция призрака */
+    width: 70px;   /* <-- ширина спрайта призрака */
+    height: 70px;  /* <-- высота спрайта призрака */
+    background: url('gastli.png') center/contain no-repeat; /* <-- путь к спрайту */
 }
-
-#circle {
-    width: 70px;
-    height: 70px;
-    background-image: url(circle.png);
-    background-size: 70px 70px;
-    position: relative;
-    top: 170px;
-    left: 850px;
-    /* animation-delay: 1s; */
-    animation: circleMove 3s infinite linear;
-}
-@keyframes circleMove {
-    0% {
-        left: 850px;
-    }
-    100% {
-        left: -20px;
-    }
-}
-
-#hand {
-    width: 70px;
-    height: 70px;
-    background-image: url(hand.png);
-    background-size: 70px 70px;
-    position: relative;
-    top: 118px;
-    left: 900px;
-    animation: handMove 3s infinite linear;
-    animation-delay: 38s;
-}
-@keyframes handMove {
-    0% {
-        left: 900px;
-    }
-    100% {
-        left: -25px;
-    }
-}
-
-#coffin {
-    width: 70px;
-    height: 70px;
-    background-image: url(rip.png);
-    background-size: 70px 70px;
-    position: relative;
-    top: 30px;
-    left: 850px;
-    animation: coffinMove 3s infinite linear;
-    animation-delay: 66s;
-}
-@keyframes coffinMove {
-    0% {
-        left: 850px;
-    }
-    100% {
-        left: -30px;
-    }
-}
-
 
 .jump {
-    animation: jump 0.8s linear;
-    animation-fill-mode: forwards;
+    animation: jump 0.6s ease-out forwards; /* <-- длительность прыжка */
 }
+
 @keyframes jump {
-    0%, 100% {
-        top: 236px;
-    }
-    10%, 90% {
-        top: 195px;
-    }
-    20%, 80% {
-        top: 170px;
-    }
-    30%, 70% {
-        top: 145px;
-    }
-    40%, 60% {
-        top: 120px;
-    } 
-    50% {
-        top: 95px;
-    }
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-150px); } /* <-- высота прыжка */
+    100% { transform: translateY(0); }
+}
+
+.obstacle {
+    position: absolute;
+    bottom: 0;
+    width: 70px;   /* <-- ширина препятствия */
+    height: 70px;  /* <-- высота препятствия */
+    background-size: cover;
+    animation: obstacleMove linear forwards;
+}
+
+@keyframes obstacleMove {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-900px); } /* <-- путь движения препятствия */
+}
+
+#score {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #fff;
+    font-size: 24px;
+    font-family: sans-serif;
 }
