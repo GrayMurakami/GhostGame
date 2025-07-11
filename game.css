@@ -7,7 +7,7 @@ body {
 .game {
     position: relative;
     width: 800px;   /* <-- ширина игрового поля */
-    height: 300px;  /* <-- высота игрового поля */
+    height: 400px;  /* <-- высота игрового поля */
     margin: 50px auto;
     border: 2px solid #000;
     overflow: hidden;
